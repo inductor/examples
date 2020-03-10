@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: "3"
 services:
   connect:
     image: cnfldemos/cp-server-connect-datagen:0.2.0-5.4.0
@@ -37,7 +37,7 @@ services:
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
-      SASL_JAAS_CONFIG_PROPERTY_FORMAT: '$SASL_JAAS_CONFIG_PROPERTY_FORMAT'
+      SASL_JAAS_CONFIG_PROPERTY_FORMAT: "$SASL_JAAS_CONFIG_PROPERTY_FORMAT"
       CONNECT_SASL_MECHANISM: PLAIN
       CONNECT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
       # Connect producer

@@ -1,13 +1,12 @@
 ---
-version: '2'
+version: "3"
 services:
-
   schema-registry:
     image: confluentinc/cp-schema-registry:5.4.0
     hostname: schema-registry
     container_name: schema-registry
     ports:
-      - '8085:8085'
+      - "8085:8085"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8085
@@ -180,4 +179,4 @@ services:
       KAFKA_REST_CLIENT_SASL_MECHANISM: "PLAIN"
 
 volumes:
-    mi2: {}
+  mi2: {}

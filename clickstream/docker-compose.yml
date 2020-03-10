@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: "3"
 services:
   zookeeper:
     container_name: zookeeper
@@ -32,8 +32,8 @@ services:
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
       CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
-      CONFLUENT_METRICS_ENABLE: 'true'
-      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      CONFLUENT_METRICS_ENABLE: "true"
+      CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
 
   schema-registry:
     container_name: schema-registry
@@ -62,9 +62,9 @@ services:
       CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
       CONNECT_STATUS_STORAGE_TOPIC: docker-connect-statuses
       CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
@@ -73,18 +73,18 @@ services:
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_PLUGIN_PATH: '/usr/share/java'
+      CONNECT_PLUGIN_PATH: "/usr/share/java"
       ELASTIC_HOST: elasticsearch
       CONNECT_HOST: kafka-connect
       GRAFANA_HOST: grafana
     volumes:
-     - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
-     - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
+      - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
+      - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
 
   ksql-server:
     container_name: ksql-server
     image: confluentinc/cp-ksql-server:5.4.0
-    ports: 
+    ports:
       - 8088:8088
     depends_on:
       - kafka
@@ -114,8 +114,7 @@ services:
     entrypoint: /bin/sh
     tty: true
 
-    
-# Not used in current demo
+  # Not used in current demo
   # control-center:
   #   image: confluentinc/cp-enterprise-control-center:5.0.0
   #   depends_on:
@@ -147,31 +146,31 @@ services:
       - kafka
       - schema-registry
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 300 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8081 300 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 20 && \
-                       ksql-datagen \
-                          bootstrap-server=kafka:29092 \
-                          quickstart=clickstream_codes \
-                          format=json \
-                          topic=clickstream_codes \
-                          maxInterval=20 \
-                          iterations=100 && \
-                       ksql-datagen \
-                          bootstrap-server=kafka:29092 \
-                          quickstart=clickstream_users \
-                          format=json \
-                          topic=clickstream_users \
-                          maxInterval=10 \
-                          iterations=1000 && \
-                       ksql-datagen \
-                          quickstart=clickstream \
-                          format=json \
-                          topic=clickstream \
-                          maxInterval=100 \
-                          bootstrap-server=kafka:29092'"
+      cub kafka-ready -b kafka:29092 1 300 && \
+      echo Waiting for Confluent Schema Registry to be ready... && \
+      cub sr-ready schema-registry 8081 300 && \
+      echo Waiting a few seconds for topic creation to finish... && \
+      sleep 20 && \
+      ksql-datagen \
+      bootstrap-server=kafka:29092 \
+      quickstart=clickstream_codes \
+      format=json \
+      topic=clickstream_codes \
+      maxInterval=20 \
+      iterations=100 && \
+      ksql-datagen \
+      bootstrap-server=kafka:29092 \
+      quickstart=clickstream_users \
+      format=json \
+      topic=clickstream_users \
+      maxInterval=10 \
+      iterations=1000 && \
+      ksql-datagen \
+      quickstart=clickstream \
+      format=json \
+      topic=clickstream \
+      maxInterval=100 \
+      bootstrap-server=kafka:29092'"
 
   elasticsearch:
     container_name: elasticsearch
@@ -183,7 +182,7 @@ services:
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
       ELASTIC_HOST: elasticsearch
     volumes:
-     - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
+      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 
   grafana:
     container_name: grafana
@@ -193,17 +192,16 @@ services:
     environment:
       GRAFANA_HOST: grafana
     volumes:
-     - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
-
+      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 # Kibana's useful for exploring the data, and/or dev tools for
 # Elasticsearch. It's not core to the demo though, so not enabled
-# by default. 
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:6.3.0
-  #   depends_on:
-  #     - elasticsearch
-  #   ports:
-  #     - 5601:5601
-  #   environment:
-  #     xpack.security.enabled: "false"
-  #     discovery.type: "single-node"
+# by default.
+# kibana:
+#   image: docker.elastic.co/kibana/kibana:6.3.0
+#   depends_on:
+#     - elasticsearch
+#   ports:
+#     - 5601:5601
+#   environment:
+#     xpack.security.enabled: "false"
+#     discovery.type: "single-node"
